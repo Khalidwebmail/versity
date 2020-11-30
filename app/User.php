@@ -2,10 +2,11 @@
 
 namespace App;
 
+use App\Models\Question;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
+use Illuminate\Support\Str;
 class User extends Authenticatable
 {
     use Notifiable;
@@ -36,4 +37,21 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Make relation with question
+     * One user has many question
+     *
+     * @return void
+     */
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
+
+    public function setTypeAttribute($val)
+    {
+        $this->attributes['title'] = $val;
+        $this->attributes['slug'] = Str::slug($val);
+    }
 }
